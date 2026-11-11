@@ -1,0 +1,20 @@
+# Full-length (300k steps) runs of the best variants from first_sweep,
+# to compare against the 300k baseline run.
+#   python sweep.py configs/sweeps/full_candidates.toml --jobs 3
+
+[sweep]
+name = "full_candidates"
+base = "configs/sac_hopper.toml"
+common = []
+
+[[variants]]
+tag = "utd2"              # two updates per env step
+set = ["sac.gradient_steps=2"]
+
+[[variants]]
+tag = "starts5k"          # begin updates earlier
+set = ["sac.learning_starts=5000"]
+
+[[variants]]
+tag = "utd2-starts5k"     # both changes together
+set = ["sac.gradient_steps=2", "sac.learning_starts=5000"]

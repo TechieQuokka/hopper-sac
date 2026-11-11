@@ -1,0 +1,33 @@
+# First manual comparison: change one thing at a time against the baseline.
+# Each variant trains for a shorter budget; promising ones can be rerun in full.
+#   python sweep.py configs/sweeps/first_sweep.toml --jobs 3
+
+[sweep]
+name = "first_sweep"
+base = "configs/sac_hopper.toml"
+# Applied to every variant.
+common = ["run.total_timesteps=100000", "sac.buffer_size=100000"]
+
+[[variants]]
+tag = "baseline"
+set = []
+
+[[variants]]
+tag = "lr1e-3"            # faster learning rate
+set = ["sac.learning_rate=1e-3"]
+
+[[variants]]
+tag = "starts5k"          # begin updates earlier
+set = ["sac.learning_starts=5000"]
+
+[[variants]]
+tag = "utd2"              # two updates per env step (about 2x slower)
+set = ["sac.gradient_steps=2"]
+
+[[variants]]
+tag = "gamma0.98"         # shorter planning horizon
+set = ["sac.gamma=0.98"]
+
+[[variants]]
+tag = "net400-300"        # larger network
+set = ["sac.net_arch=[400, 300]"]

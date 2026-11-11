@@ -1,0 +1,31 @@
+# Baseline settings: SAC on Hopper-v5.
+# Any value can be overridden from the command line, for example:
+#   python train.py --set sac.learning_rate=1e-3 --set run.seed=1
+
+[run]
+name = "sac_hopper"
+env_id = "Hopper-v5"
+seed = 0
+device = "cuda"
+total_timesteps = 300_000
+render_camera = "track"    # camera that follows the robot in videos
+
+[sac]
+learning_rate = 3e-4
+buffer_size = 300_000      # matches total_timesteps to keep snapshots small
+learning_starts = 10_000   # random actions only, before updates begin
+batch_size = 256
+tau = 0.005
+gamma = 0.99
+train_freq = 1             # env steps between update rounds
+gradient_steps = 1         # updates per round
+ent_coef = "auto"
+net_arch = [256, 256]
+
+[eval]
+freq = 10_000              # env steps between evaluations
+episodes = 5
+
+[save]
+snapshot_freq = 10_000     # resumable snapshot (model + replay buffer)
+checkpoint_freq = 50_000   # model-only checkpoint kept for later comparison
